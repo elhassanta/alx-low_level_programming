@@ -4,16 +4,20 @@
  *@b: take a character string
  *@Return: return an int number
  */
-unsigned int binary_to_uint(const char *b)
+unsigned int binary_to_uint(char const *b)
 {
 	if (b == NULL)
 		return (0);
-	int i = 0, j = 0, p = 1, m;
+	int i, j, p, m;
 
-	unsigned int number = 0;
+	i = j = 0;
+	p = 1;
+	unsigned int number;
 
-	char *bin = b;
+	char *bin;
 
+	bin = b;
+	number = 0;
 	while (*bin != '\0')
 	{
 		i++;
@@ -26,7 +30,7 @@ unsigned int binary_to_uint(const char *b)
 			return (0);
 		if (j == 0)
 		{
-			p = 1;
+			p = 1 * (b[i] - '0');
 		}
 		else
 		{
@@ -34,9 +38,7 @@ unsigned int binary_to_uint(const char *b)
 			for (m = 1; m <= j; m++)
 				p = p * 2;
 			p = (b[i] - '0') * p;
-			printf("%d", p);
 		}
-		printf("\n");
 		number = number + p;
 		i--;
 		j++;
