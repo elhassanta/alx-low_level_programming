@@ -9,6 +9,7 @@ unsigned int binary_to_uint(char const *b)
 	int i, j, m;
 	unsigned int p, number;
 	char const *bin;
+
 	if (b == NULL)
 		return (0);
 
