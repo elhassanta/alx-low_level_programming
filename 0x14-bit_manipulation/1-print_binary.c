@@ -8,6 +8,11 @@ void print_binary(unsigned int n)
 	int i = 0, j = 0, k;
 	char c[63];
 
+	if (n == 0)
+	{
+		putchar('0');
+		return;
+	}
 	while (n > 0)
 	{
 		k = (n & 1);
