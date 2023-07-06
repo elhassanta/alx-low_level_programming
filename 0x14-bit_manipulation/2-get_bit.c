@@ -1,7 +1,9 @@
 #include "main.h"
 /**
- *
- *
+ *get_bit - this function return the value of bit at index
+ *@n: parameter integer
+ *@index: parameter integer
+ *Return: return 0 or 1 or -1
  */
 int get_bit(unsigned long int n, unsigned int index)
 {
