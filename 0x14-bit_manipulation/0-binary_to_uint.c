@@ -2,7 +2,7 @@
 /**
  *binary_to_uint - this function will convert a binary number to a number
  *@b: take a character string
- *@Return: return an int number
+ *Return: return an int number or 0
  */
 unsigned int binary_to_uint(char const *b)
 {
