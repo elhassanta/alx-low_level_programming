@@ -5,29 +5,22 @@
  */
 void print_binary(unsigned long int n)
 {
-	int i = 0, j = 0, k;
-	char c[63];
+	unsigned long int ntest = (1ul << (sizeof(unsigned long int) * 8 - 1));
 
 	if (n == 0)
 	{
 		_putchar('0');
 		return;
 	}
-	while (n > 0)
+	while ((n & ntest) == 0)
+		ntest = (ntest >> 1);
+	while ( ntest > 0)
 	{
-		k = (n & 1);
-		if (k)
-			c[i++] = '1';
+		if (ntest & n)
+			_putchar('1');
 		else
-			c[i++] = '0';
-		n = (n >> 1);
+			_putchar('0');
+		ntest = (ntest >> 1);
 	}
-	i--;
-	while (i >= 0)
-	{
-		_putchar(c[i]);
-		i--;
-	}
-	while (c[j] != '\0')
-		j++;
+
 }
