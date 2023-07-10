@@ -29,7 +29,11 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "Error: Can't read from the file %s\n", argv[1]);
 		exit(98);
 	}
-	close(fd1);
+	if (close(fd1) == -1)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd1);
+		exit(100);
+	}
 	fd2 = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0664);
 	if (fd2 == -1)
 	{
@@ -42,11 +46,15 @@ int main(int argc, char *argv[])
 		{
 			close(fd2);
 			fprintf(stderr, "Error: Can't write to NAME_OF_THE_FILE %s\n", argv[2]);
-			exit(99);
+			exit(100);
 		}
 		i++;
 	}
-	close(fd2);
+	if (close(fd2) == -1)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd2);
+		exit(100);
+	}
 	return (1);
 
 }
