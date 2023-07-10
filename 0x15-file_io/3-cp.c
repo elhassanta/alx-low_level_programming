@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
 {
 	int fd1, fd2, text1;
 	char buffer[127000];
+
 	if (argc < 3)
 		return (-1);
 	fd1 = open(argv[1], O_RDONLY);
@@ -25,7 +26,7 @@ int main(int argc, char *argv[])
 	fd2 = open(argv[2], O_WRONLY | O_CREAT, 0644);
 	if (fd2 == -1)
 		return (-1);
-	while (*(buffer + i)!= '\0')
+	while (*(buffer + i) != '\0')
 	{
 		if (write(fd2, buffer + i, 1) == -1)
 		{
