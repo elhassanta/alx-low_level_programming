@@ -12,26 +12,37 @@ int main(int argc, char *argv[])
 	char buffer[127000];
 
 	if (argc < 3)
-		return (-1);
+	{
+		fprintf(stderr, "Usage: %s file_from file_to\n", argv[0]);
+		exit(97);
+	}
 	fd1 = open(argv[1], O_RDONLY);
 	if (fd1 == -1)
-		return (-1);
+	{
+		fprintf(stderr, "Error: Can't read from the file %s\n", argv[1]);
+		exit(98);
+	}
 	text1 = read(fd1, buffer, 127000);
 	if (text1 == -1)
 	{
 		close(fd1);
-		return (-1);
+		fprintf(stderr, "Error: Can't read from the file %s\n", argv[1]);
+		exit(98);
 	}
 	close(fd1);
-	fd2 = open(argv[2], O_WRONLY | O_CREAT, 0644);
+	fd2 = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0664);
 	if (fd2 == -1)
-		return (-1);
+	{
+		fprintf(stderr, "Error: Can't write to NAME_OF_THE_FILE %s\n", argv[2]);
+		exit(99);
+	}
 	while (*(buffer + i) != '\0')
 	{
 		if (write(fd2, buffer + i, 1) == -1)
 		{
 			close(fd2);
-			return (-1);
+			fprintf(stderr, "Error: Can't write to NAME_OF_THE_FILE %s\n", argv[2]);
+			exit(99);
 		}
 		i++;
 	}
