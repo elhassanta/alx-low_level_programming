@@ -7,26 +7,19 @@
  */
 int create_file(const char *filename, char *text_content)
 {
-	int fd;
-	ssize_t bytesWriten = 0;
+	int fd, c_write, len = 0;
 
 	if (filename == NULL)
 		return (-1);
-	fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0600);
-	if (fd == -1)
+	if (text_content != NULL)
 	{
+		for (len; text_content[len];)
+			len++;
+	}
+	fd = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0600);
+	c_write = write(fd, text_content, len);
+	if (fd == -1 || c_write == -1)
 		return (-1);
-	}
-	while (*(text_content + bytesWriten) != '\0')
-	{
-		if (write(fd, text_content + bytesWriten, 1) == -1)
-		{
-			close(fd);
-			return (-1);
-		}
-		bytesWriten++;
-	}
-
 	close(fd);
 	return (1);
 }
