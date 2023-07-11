@@ -7,22 +7,19 @@
  */
 int append_text_to_file(const char *filename, char *text_content)
 {
-	int fd, i = 0;
+	int fd, c_write, len;
 
 	if (filename == NULL)
 		return (-1);
-	fd = open(filename, O_WRONLY | O_APPEND, 0644);
-	if (fd == -1)
-		return (-1);
-	while (*(text_content + i) != '\0')
+	if (text_content != NULL)
 	{
-		if (write(fd, text_content + i, 1) == -1)
-		{
-			close(fd);
-			return (-1);
-		}
-		i++;
+		for (len = 0; text_content[len];)
+			len++;
 	}
+	fd = open(filename, O_WRONLY | O_APPEND);
+	c_write = write(fd, text_content, len);
+	if (fd == -1 || c_write == -1)
+		return (-1);
 	close(fd);
 	return (1);
 }
