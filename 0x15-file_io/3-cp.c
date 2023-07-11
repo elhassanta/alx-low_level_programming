@@ -44,17 +44,25 @@ int main(int argc, char *argv[])
 	{
 		if (write(fd2, buffer + i, 1) == -1)
 		{
-			close(fd2);
-			dprintf(STDERR_FILENO, "Error: Can't write %s\n", argv[2]);
-			exit(100);
+			close_file(fd2);
+			dprintf(STDERR_FILENO, "Error: Can't write to %s\n",argv[2]);
+			exit(99);
 		}
 		i++;
 	}
-	if (close(fd2) == -1)
-	{
-		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd2);
-		exit(100);
-	}
+	close_file(fd2);
 	return (1);
 
+}
+/**
+ *close_file - this function close a file
+ *@fd: param integer
+ */
+void close_file(int fd)
+{
+	if (close(fd) == -1)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd);
+		exit(100);
+	}
 }
