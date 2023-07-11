@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 	text1 = read(fd1, buffer, 127000);
 	if (text1 == -1)
 	{
-		close(fd1);
+		close_file(fd1);
 		dprintf(STDERR_FILENO, "Error: Can't read %s\n", argv[1]);
 		exit(98);
 	}
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 		if (write(fd2, buffer + i, 1) == -1)
 		{
 			close_file(fd2);
-			dprintf(STDERR_FILENO, "Error: Can't write to %s\n",argv[2]);
+			dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
 			exit(99);
 		}
 		i++;
