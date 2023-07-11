@@ -17,7 +17,7 @@ if (fd == -1)
 return (0);
 buffer = malloc(sizeof(char) * letters);
 c_read = read(fd, buffer, letters);
-c_write = write(STDOUT_FILENO, buf, c_read);
+c_write = write(STDOUT_FILENO, buffer, c_read);
 free(buffer);
 close(fd);
 return (c_write);
