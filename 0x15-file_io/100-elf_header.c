@@ -16,6 +16,7 @@ void main(int argc, char *argv[])
 	ssize_t bytes_read;
 	unsigned char class;
 	const char *class_str = "Unknown";
+	unsigned char version;
 
 	if (argc != 2)
 	{
@@ -53,6 +54,9 @@ void main(int argc, char *argv[])
 			break;
 	}
 	printf("Class: %s\n", class_str);
+
+	version = ehdr.e_ident[EI_VERSION];
+	printf("Version: %d\n", version);
 
 	if (close(fd) == -1)
 	{
