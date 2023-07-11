@@ -11,12 +11,14 @@
 
 void main(int argc, char *argv[])
 {
-	int fd;
+	int fd, i;
 	Elf64_Ehdr ehdr;
 	ssize_t bytes_read;
 	unsigned char class;
 	const char *class_str = "Unknown";
 	unsigned char version;
+	unsigned char data_encoding;
+	const char *data_encoding_str = "Unknown";
 
 	if (argc != 2)
 	{
@@ -37,7 +39,7 @@ void main(int argc, char *argv[])
 	}
 	printf("ELF Header\n");
 	printf("Magic: ");
-	for (int i = 0; i < EI_NIDENT; i++)
+	for (i = 0; i < EI_NIDENT; i++)
 	{
 		printf("%02x ", ehdr.e_ident[i]);
 	}
@@ -57,6 +59,18 @@ void main(int argc, char *argv[])
 
 	version = ehdr.e_ident[EI_VERSION];
 	printf("Version: %d\n", version);
+
+	data_encoding = ehdr.e_ident[EI_DATA];
+	const char *data_encoding_str = "Unknown";
+	switch (data_encoding)
+	{
+		case ELFDATA2LSB:
+			data_encoding_str = "Little Endian";
+			break;
+		case ELFDATA2MSB:
+			data_encoding_str = "Big Endian";
+			break;
+	}
 
 	if (close(fd) == -1)
 	{
