@@ -1,0 +1,14 @@
+int type;
+type = 
+switch (type)
+{
+     case ET_NONE(0x0):No file Type
+     case ET_REL(0x1):Relocatable object file.
+     case ET_EXEC(0x2):Executable file.
+     case ET_DYN(0x3): Shared object file
+     case ET_CORE(0x4): Core file
+     case ET_LOOS(0xfe00): Start of the OS-specific range.
+     case ET_HIOS(0xfeff):End of the OS-specific range.
+    case ET_LOPROC(0xff00):Start of the processor-specific range.
+    case ET_HIPROC(0xffff):End of the processor-specific range.
+}

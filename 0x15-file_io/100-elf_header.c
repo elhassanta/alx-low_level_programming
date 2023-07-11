@@ -19,6 +19,10 @@ void main(int argc, char *argv[])
 	unsigned char version;
 	unsigned char data_encoding;
 	const char *data_encoding_str = "Unknown";
+	unsigned char osabi;
+	const char *osabi_str = "Unknown";
+	unsigned char abi_version;
+	int hexValue;
 
 	if (argc != 2)
 	{
@@ -61,7 +65,7 @@ void main(int argc, char *argv[])
 	printf("Version: %d\n", version);
 
 	data_encoding = ehdr.e_ident[EI_DATA];
-	const char *data_encoding_str = "Unknown";
+	data_encoding_str = "Unknown";
 	switch (data_encoding)
 	{
 		case ELFDATA2LSB:
@@ -71,7 +75,57 @@ void main(int argc, char *argv[])
 			data_encoding_str = "Big Endian";
 			break;
 	}
+	printf("Data: %s\n", data_encoding_str);
 
+	osabi = ehdr.e_ident[EI_OSABI];
+	osabi_str = "Unknown";
+	switch (osabi)
+	{
+		case ELFOSABI_SYSV:
+			osabi_str = "UNIX - System V";
+			break;
+		case ELFOSABI_LINUX:
+			osabi_str = "Linux";
+			break;
+	}
+	printf("OS/ABI: %s\n", osabi_str);
+
+	abi_version = ehdr.e_ident[EI_ABIVERSION];
+	printf("ABI Version: %d\n", abi_version);
+
+	hexValue = ehdr.e_type;
+	switch (hexValue)
+	{
+		case ET_NONE:
+			type = "No file Type";
+			break;
+		case ET_REL:
+			type = "Relocatable object file";
+			break;
+		case ET_EXEC:
+			type = "Executable file";
+			break;
+		case ET_DYN: 
+			type = "Shared object file";
+		case ET_CORE:
+			type = "Core file";
+			break;
+		case ET_LOOS:
+			type = "Start of the OS-specific range";
+			break;
+		case ET_HIOS:
+			type = "End of the OS-specific range";
+			break;
+		case ET_LOPROC:
+			type = "Start of the processor-specific range";
+			break;
+		case ET_HIPROC:
+			type = "End of the processor-specific range";
+			break;
+	}
+	printf("Type: 0x%x\n", ehdr.e_type);
+
+	
 	if (close(fd) == -1)
 	{
 		dprintf(STDERR_FILENO, "Error: error occured while closing the file with fd %d\n", fd);
