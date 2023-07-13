@@ -49,9 +49,9 @@ void main(int argc, char *argv[])
 	class_str = print_class(ehdr);
 	printf("Class: %s\n", class_str);
 
-	print_version(ehdr);
-
 	print_data(ehdr);
+
+	print_version(ehdr);
 
 	print_osabi(ehdr);
 
