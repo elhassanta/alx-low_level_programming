@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <elf.h>
 
+void check_elf(unsigned char *e_ident);
 const char *print_class(Elf64_Ehdr ehdr);
 void print_magic(Elf64_Ehdr ehdr);
 void print_version(Elf64_Ehdr ehdr);
@@ -41,6 +42,7 @@ void main(int argc, char *argv[])
 		perror("Failed to read file\n");
 		exit(98);
 	}
+	check_elf(ehdr.e_ident);
 	printf("ELF Header\n");
 	print_magic(ehdr);
 
@@ -61,6 +63,26 @@ void main(int argc, char *argv[])
 	{
 		dprintf(STDERR_FILENO, "Error: error occured fd %d\n", fd);
 		exit(98);
+	}
+}
+/**
+ * check_elf - Checks if the file is an elf file
+ * @e_ident: A pointer to an array containing the ELF magic numbers.
+ *
+ * Description: If the file is not an ELF file - exit code 98.
+ */
+void check_elf(unsigned char *e_ident)
+{
+	int i;
+	for (i = 0; i < 4; i++)
+	{
+		if (e_ident[i] != 127 && e_ident[i] != 'E' && 
+				e_ident[i] != 'L' &&
+				e_ident[i] != 'F')
+		{
+			dprintf(STDERR_FILENO, "Error: Not an ELF file\n");
+			exit(98);
+		}
 	}
 }
 /**
@@ -92,10 +114,10 @@ const char *print_class(Elf64_Ehdr ehdr)
 	switch (class)
 	{
 		case ELFCLASS32:
-			class_str = "32-bit";
+			class_str = "ELF32";
 			break;
 		case ELFCLASS64:
-			class_str = "64-bit";
+			class_str = "ELF64";
 			break;
 	}
 	return (class_str);
@@ -125,10 +147,10 @@ void print_data(Elf64_Ehdr ehdr)
 	switch (data_encoding)
 	{
 		case ELFDATA2LSB:
-			data_encoding_str = "Little Endian";
+			data_encoding_str = "2's complement, little endian";
 			break;
 		case ELFDATA2MSB:
-			data_encoding_str = "Big Endian";
+			data_encoding_str = "2's complement, big endian";
 			break;
 	}
 	printf("Data: %s\n", data_encoding_str);
@@ -141,6 +163,7 @@ void print_osabi(Elf64_Ehdr ehdr)
 {
 	unsigned char osabi;
 	const char *osabi_str = "Unknown";
+	int x = 0;
 
 	osabi = ehdr.e_ident[EI_OSABI];
 	osabi_str = "Unknown";
@@ -150,10 +173,18 @@ void print_osabi(Elf64_Ehdr ehdr)
 			osabi_str = "UNIX - System V";
 			break;
 		case ELFOSABI_LINUX:
-			osabi_str = "Linux";
+			osabi_str = "LINUX";
 			break;
+		default:
+			x = 1;
+			osabi_str = "<unknown:";
 	}
-	printf("OS/ABI: %s\n", osabi_str);
+	if ( x == 1)
+	{
+		printf("OS/ABI: %s %d>\n",osabi_str,osabi);
+	}
+	else
+		printf("OS/ABI: %s\n", osabi_str);
 }
 /**
  *print_abi_version - this function will print abi version
