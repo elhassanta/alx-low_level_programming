@@ -18,52 +18,52 @@ void print_type(Elf64_Ehdr ehdr);
  *@argc: param integer represent number arguments
  *@argv: name of the ELF file
  */
-void main(int argc, char *argv[])
+int main(int __attribute__((__unused__)) argc, char *argv[])
 {
-	int fd;
-	Elf64_Ehdr ehdr;
-	ssize_t bytes_read;
-	const char *class_str = "Unknown";
+Elf64_Ehdr *ehdr;
+int o, r;
+const char *class_str;
 
-	if (argc != 2)
-	{
-		dprintf(STDERR_FILENO, "Usage: elf_header elf_filename\n");
-		exit(98);
-	}
-	fd = open(argv[1], O_RDONLY);
-	if (fd == -1)
-	{
-		perror("Failed to open file\n");
-		exit(98);
-	}
-	bytes_read = read(fd, &ehdr, sizeof(Elf64_Ehdr));
-	if (bytes_read == -1)
-	{
-		perror("Failed to read file\n");
-		exit(98);
-	}
-	check_elf(ehdr.e_ident);
-	printf("ELF Header\n");
-	print_magic(ehdr);
+o = open(argv[1], O_RDONLY);
+if (o == -1)
+{
+dprintf(STDERR_FILENO, "Error: Can't read file %s\n", argv[1]);
+exit(98);
+}
+ehdr = malloc(sizeof(Elf64_Ehdr));
+if (ehdr == NULL)
+{
+close(o);
+dprintf(STDERR_FILENO, "Error: Can't read file %s\n", argv[1]);
+exit(98);
+}
+r = read(o, ehdr, sizeof(Elf64_Ehdr));
+check_elf((*ehdr).e_ident);
+printf("ELF Header\n");
+print_magic(*ehdr);
 
-	class_str = print_class(ehdr);
-	printf("Class: %s\n", class_str);
+class_str = print_class(*ehdr);
+printf("Class: %s\n", class_str);
 
-	print_data(ehdr);
+print_data(*ehdr);
 
-	print_version(ehdr);
+print_version(*ehdr);
 
-	print_osabi(ehdr);
+print_osabi(*ehdr);
 
-	print_abi_version(ehdr);
+print_abi_version(*ehdr);
 
-	print_type(ehdr);
-
-	if (close(fd) == -1)
-	{
-		dprintf(STDERR_FILENO, "Error: error occured fd %d\n", fd);
-		exit(98);
-	}
+print_type(*ehdr);
+if (r == -1)
+{
+free(ehdr);
+close(o);
+dprintf(STDERR_FILENO, "Error: `%s`: No such file\n", argv[1]);
+exit(98);
+}
+free(ehdr);
+close(o);
+return (0);
 }
 /**
  * check_elf - Checks if the file is an elf file
