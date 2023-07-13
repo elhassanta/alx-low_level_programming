@@ -135,9 +135,8 @@ void print_version(Elf64_Ehdr ehdr)
 	unsigned char version;
 
 	version = ehdr.e_ident[EI_VERSION];
-	printf(" Version: %d\n", version);
+	printf(" Version: %d  (current)\n", version);
 }
-#include "elf.h"
 
 /**
  *print_data - this function will print data
