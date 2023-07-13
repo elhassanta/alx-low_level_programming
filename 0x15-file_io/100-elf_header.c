@@ -3,26 +3,26 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <elf.h>
+
+const char *print_class(Elf64_Ehdr ehdr);
+void print_magic(Elf64_Ehdr ehdr);
+void print_version(Elf64_Ehdr ehdr);
+void print_osabi(Elf64_Ehdr ehdr);
+void print_data(Elf64_Ehdr ehdr);
+void print_abi_version(Elf64_Ehdr ehdr);
+void print_type(Elf64_Ehdr ehdr);
+
 /**
  *main - this function will print inf about ELF file header
  *@argc: param integer represent number arguments
  *@argv: name of the ELF file
  */
-
 void main(int argc, char *argv[])
 {
-	int fd, i;
+	int fd;
 	Elf64_Ehdr ehdr;
 	ssize_t bytes_read;
-	unsigned char class;
 	const char *class_str = "Unknown";
-	unsigned char version;
-	unsigned char data_encoding;
-	const char *data_encoding_str = "Unknown";
-	unsigned char osabi;
-	const char *osabi_str = "Unknown";
-	unsigned char abi_version;
-	int hexValue;
 
 	if (argc != 2)
 	{
@@ -42,12 +42,51 @@ void main(int argc, char *argv[])
 		exit(98);
 	}
 	printf("ELF Header\n");
+	print_magic(ehdr);
+
+	class_str = print_class(ehdr);
+	printf("Class: %s\n", class_str);
+
+	print_version(ehdr);
+
+	print_data(ehdr);
+
+	print_osabi(ehdr);
+
+	print_abi_version(ehdr);
+
+	print_type(ehdr);
+
+	if (close(fd) == -1)
+	{
+		dprintf(STDERR_FILENO, "Error: error occured fd %d\n", fd);
+		exit(98);
+	}
+}
+/**
+ *print_magic - this function will print magic
+ *@ehdr: parameter struct
+ */
+void print_magic(Elf64_Ehdr ehdr)
+{
+	int i;
+
 	printf("Magic: ");
 	for (i = 0; i < EI_NIDENT; i++)
 	{
 		printf("%02x ", ehdr.e_ident[i]);
 	}
 	printf("\n");
+}
+/**
+ *print_class - this function will find elf file class
+ *@ehdr: parameter struct
+ *Return:return char pointer to class name
+ */
+const char *print_class(Elf64_Ehdr ehdr)
+{
+	unsigned char class;
+	const char *class_str;
 
 	class = ehdr.e_ident[EI_CLASS];
 	switch (class)
@@ -59,10 +98,27 @@ void main(int argc, char *argv[])
 			class_str = "64-bit";
 			break;
 	}
-	printf("Class: %s\n", class_str);
+	return (class_str);
+}
+/**
+ *print_version - this function will print version
+ *@ehdr: parameter struct
+ */
+void print_version(Elf64_Ehdr ehdr)
+{
+	unsigned char version;
 
 	version = ehdr.e_ident[EI_VERSION];
 	printf("Version: %d\n", version);
+}
+/**
+ *print_data - this function will print data
+ *@ehdr: parameter struct
+ */
+void print_data(Elf64_Ehdr ehdr)
+{
+	unsigned char data_encoding;
+	const char *data_encoding_str = "Unknown";
 
 	data_encoding = ehdr.e_ident[EI_DATA];
 	data_encoding_str = "Unknown";
@@ -76,6 +132,15 @@ void main(int argc, char *argv[])
 			break;
 	}
 	printf("Data: %s\n", data_encoding_str);
+}
+/**
+ *print_osabi - this function will print os abi
+ *@ehdr: parameter struct
+ */
+void print_osabi(Elf64_Ehdr ehdr)
+{
+	unsigned char osabi;
+	const char *osabi_str = "Unknown";
 
 	osabi = ehdr.e_ident[EI_OSABI];
 	osabi_str = "Unknown";
@@ -89,46 +154,59 @@ void main(int argc, char *argv[])
 			break;
 	}
 	printf("OS/ABI: %s\n", osabi_str);
+}
+/**
+ *print_abi_version - this function will print abi version
+ *@ehdr: parameter struct
+ */
+void print_abi_version(Elf64_Ehdr ehdr)
+{
+	unsigned char abi_version;
 
 	abi_version = ehdr.e_ident[EI_ABIVERSION];
 	printf("ABI Version: %d\n", abi_version);
+}
+/**
+ *print_type - this function will print type
+ *@ehdr: parameter struct
+ */
+void print_type(Elf64_Ehdr ehdr)
+{
+	int hexValue;
+	char *type = "Unknown";
 
 	hexValue = ehdr.e_type;
 	switch (hexValue)
 	{
 		case ET_NONE:
-			type = "No file Type";
+			type = "NONE (No file Type)";
 			break;
 		case ET_REL:
-			type = "Relocatable object file";
+			type = "REL (Relocatable object file)";
 			break;
 		case ET_EXEC:
-			type = "Executable file";
+			type = "EXEC (Executable file)";
 			break;
-		case ET_DYN: 
-			type = "Shared object file";
+		case ET_DYN:
+			type = "DYN (Shared object file)";
+			break;
 		case ET_CORE:
-			type = "Core file";
+			type = "CORE (Core file)";
 			break;
 		case ET_LOOS:
-			type = "Start of the OS-specific range";
+			type = "LOOS (Start of the OS-specific range)";
 			break;
 		case ET_HIOS:
-			type = "End of the OS-specific range";
+			type = "HIOS (End of the OS-specific range)";
 			break;
 		case ET_LOPROC:
-			type = "Start of the processor-specific range";
+			type = "LOPROC (Start of the processor-specific range)";
 			break;
 		case ET_HIPROC:
-			type = "End of the processor-specific range";
+			type = "HIPROC (End of the processor-specific range)";
 			break;
+		default:
+			type = "Unknown";
 	}
-	printf("Type: 0x%x\n", ehdr.e_type);
-
-	
-	if (close(fd) == -1)
-	{
-		dprintf(STDERR_FILENO, "Error: error occured while closing the file with fd %d\n", fd);
-		exit(98);
-	}
+	printf("Type: %s\n", type);
 }
