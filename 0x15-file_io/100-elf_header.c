@@ -11,7 +11,8 @@ void check_elf(unsigned char *e_ident);
 const char *print_class(Elf64_Ehdr ehdr);
 void print_magic(Elf64_Ehdr ehdr);
 void print_version(Elf64_Ehdr ehdr);
-
+void close_elf(int elf);
+void print_entry(unsigned long int e_entry, unsigned char *e_ident);
 /**
  *main - this function will print inf about ELF file header
  *@argc: param integer represent number arguments
@@ -32,7 +33,7 @@ exit(98);
 ehdr = malloc(sizeof(Elf64_Ehdr));
 if (ehdr == NULL)
 {
-close(o);
+close_elf(o);
 dprintf(STDERR_FILENO, "Error: Can't read file %s\n", argv[1]);
 exit(98);
 }
@@ -42,7 +43,7 @@ printf("ELF Header\n");
 print_magic(*ehdr);
 
 class_str = print_class(*ehdr);
-printf("Class: %s\n", class_str);
+printf(" Class: %s\n", class_str);
 
 print_data(*ehdr);
 
@@ -53,15 +54,18 @@ print_osabi(*ehdr);
 print_abi_version(*ehdr);
 
 print_type(*ehdr);
+
+print_entry((*ehdr).e_entry, (*ehdr).e_ident);
+
 if (r == -1)
 {
 free(ehdr);
-close(o);
+close_elf(o);
 dprintf(STDERR_FILENO, "Error: `%s`: No such file\n", argv[1]);
 exit(98);
 }
 free(ehdr);
-close(o);
+close_elf(o);
 return (0);
 }
 /**
@@ -93,7 +97,7 @@ void print_magic(Elf64_Ehdr ehdr)
 {
 	int i;
 
-	printf("Magic: ");
+	printf(" Magic: ");
 	for (i = 0; i < EI_NIDENT; i++)
 	{
 		printf("%02x ", ehdr.e_ident[i]);
@@ -131,7 +135,7 @@ void print_version(Elf64_Ehdr ehdr)
 	unsigned char version;
 
 	version = ehdr.e_ident[EI_VERSION];
-	printf("Version: %d\n", version);
+	printf(" Version: %d\n", version);
 }
 #include "elf.h"
 
@@ -155,7 +159,7 @@ case ELFDATA2MSB:
 data_encoding_str = "2's complement, big endian";
 break;
 }
-printf("Data: %s\n", data_encoding_str);
+printf(" Data: %s\n", data_encoding_str);
 }
 /**
  *print_osabi - this function will print os abi
@@ -183,10 +187,10 @@ osabi_str = "<unknown:";
 }
 if (x == 1)
 {
-printf("OS/ABI: %s %d>\n", osabi_str, osabi);
+printf(" OS/ABI: %s %d>\n", osabi_str, osabi);
 }
 else
-printf("OS/ABI: %s\n", osabi_str);
+printf(" OS/ABI: %s\n", osabi_str);
 }
 /**
 *print_abi_version - this function will print abi version
@@ -197,7 +201,7 @@ void print_abi_version(Elf64_Ehdr ehdr)
 unsigned char abi_version;
 
 abi_version = ehdr.e_ident[EI_ABIVERSION];
-printf("ABI Version: %d\n", abi_version);
+printf(" ABI Version: %d\n", abi_version);
 }
 /**
  *print_type - this function will print type
@@ -206,40 +210,74 @@ printf("ABI Version: %d\n", abi_version);
 void print_type(Elf64_Ehdr ehdr)
 {
 int hexValue;
-char *type = "Unknown";
+char *type = " Unknown";
 
 hexValue = ehdr.e_type;
 switch (hexValue)
 {
 case ET_NONE:
-type = "NONE (No file Type)";
+type = " NONE (No file Type)";
 break;
 case ET_REL:
-type = "REL (Relocatable object file)";
+type = " REL (Relocatable object file)";
 break;
 case ET_EXEC:
-type = "EXEC (Executable file)";
+type = " EXEC (Executable file)";
 break;
 case ET_DYN:
-type = "DYN (Shared object file)";
+type = " DYN (Shared object file)";
 break;
 case ET_CORE:
-type = "CORE (Core file)";
+type = " CORE (Core file)";
 break;
 case ET_LOOS:
-type = "LOOS (Start of the OS-specific range)";
+type = " LOOS (Start of the OS-specific range)";
 break;
 case ET_HIOS:
-type = "HIOS (End of the OS-specific range)";
+type = " HIOS (End of the OS-specific range)";
 break;
 case ET_LOPROC:
-type = "LOPROC (Start of the processor-specific range)";
+type = " LOPROC (Start of the processor-specific range)";
 break;
 case ET_HIPROC:
-type = "HIPROC (End of the processor-specific range)";
+type = " HIPROC (End of the processor-specific range)";
 break;
 default:
-type = "Unknown";
+type = " Unknown";
 }
-printf("Type: %s\n", type);
+printf(" Type: %s\n", type);
+}
+/**
+ * close_elf - Closes an ELF file.
+ * @elf: The file descriptor of the ELF file.
+ *
+ * Description: If the file cannot be closed - exit code 98.
+ */
+void close_elf(int elf)
+{
+if (close(elf) == -1)
+{
+dprintf(STDERR_FILENO,
+" Error: Can't close fd %d\n", elf);
+exit(98);
+}
+}
+/**
+ *print_entry - this function will print entry point
+ *@e_entry: param integer
+ *@e_ident: param pointer
+ */
+void print_entry(unsigned long int e_entry, unsigned char *e_ident)
+{
+printf(" Entry point address: ");
+if (e_ident[EI_DATA] == ELFDATA2MSB)
+{
+e_entry = ((e_entry << 8) & 0xFF00FF00) |
+((e_entry >> 8) & 0xFF00FF);
+e_entry = (e_entry << 16) | (e_entry >> 16);
+}
+if (e_ident[EI_CLASS] == ELFCLASS32)
+printf("%#x\n", (unsigned int)e_entry);
+else
+printf("%#lx\n", e_entry);
 }
