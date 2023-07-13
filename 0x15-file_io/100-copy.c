@@ -15,7 +15,7 @@ void close_elf(int elf);
 void print_entry(unsigned long int e_entry, unsigned char *e_ident);
 /**
  *main - this function will print inf about ELF file header
- *@argc: param integer represent number arguments
+ *@argc: parameter integer represent number arguments
  *@argv: name of the ELF file
  */
 int main(int __attribute__((__unused__)) argc, char *argv[])
