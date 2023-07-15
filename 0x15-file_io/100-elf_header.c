@@ -48,7 +48,7 @@ exit(98);
 void print_magic(unsigned char *e_ident)
 {
 int index;
-printf(" Magic: ");
+printf("\tMagic: ");
 for (index = 0; index < EI_NIDENT; index++)
 {
 printf("%02x", e_ident[index]);
@@ -89,7 +89,7 @@ printf("<unknown: %x>\n", e_ident[EI_CLASS]);
  */
 void print_data(unsigned char *e_ident)
 {
-printf(" Data: ");
+printf("\tData:\t");
 switch (e_ident[EI_DATA])
 {
 case ELFDATANONE:
@@ -112,12 +112,12 @@ printf("<unknown: %x>\n", e_ident[EI_CLASS]);
  */
 void print_version(unsigned char *e_ident)
 {
-printf(" Version:\t%d",
+printf("\tVersion:\t%d",
 e_ident[EI_VERSION]);
 switch (e_ident[EI_VERSION])
 {
 case EV_CURRENT:
-printf(" (current)\n");
+printf("(current)\n");
 break;
 default:
 printf("\n");
@@ -131,7 +131,7 @@ break;
  */
 void print_osabi(unsigned char *e_ident)
 {
-printf(" OS/ABI:\t");
+printf("\tOS/ABI:\t");
 switch (e_ident[EI_OSABI])
 {
 case ELFOSABI_NONE:
@@ -175,7 +175,7 @@ printf("<unknown: %x>\n", e_ident[EI_OSABI]);
  */
 void print_abi(unsigned char *e_ident)
 {
-printf(" ABI Version: %d\n",
+printf("\tABI Version:\t%d\n",
 e_ident[EI_ABIVERSION]);
 }
 
@@ -188,7 +188,7 @@ void print_type(unsigned int e_type, unsigned char *e_ident)
 {
 if (e_ident[EI_DATA] == ELFDATA2MSB)
 e_type >>= 8;
-printf(" Type: ");
+printf("\tType:\t");
 
 switch (e_type)
 {
@@ -219,7 +219,7 @@ printf("<unknown: %x>\n", e_type);
  */
 void print_entry(unsigned long int e_entry, unsigned char *e_ident)
 {
-printf(" Entry point address: ");
+printf("\tEntry point address:\t");
 if (e_ident[EI_DATA] == ELFDATA2MSB)
 {
 e_entry = ((e_entry << 8) & 0xFF00FF00) |
