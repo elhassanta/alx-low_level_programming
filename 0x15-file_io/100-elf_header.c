@@ -107,12 +107,12 @@ printf("<unknown: %x>\n", e_ident[EI_CLASS]);
 }
 
 /**
- *  * print_version - Prints the version of an ELF header.
- *   * @e_ident: A pointer to an array containing the ELF version.
- *    */
+ *print_version - Prints the version of an ELF header.
+ *@e_ident: A pointer to an array containing the ELF version.
+ */
 void print_version(unsigned char *e_ident)
 {
-printf(" Version: %d",
+printf(" Version:\t%d",
 e_ident[EI_VERSION]);
 switch (e_ident[EI_VERSION])
 {
@@ -131,7 +131,7 @@ break;
  */
 void print_osabi(unsigned char *e_ident)
 {
-printf(" OS/ABI: ");
+printf(" OS/ABI:\t");
 switch (e_ident[EI_OSABI])
 {
 case ELFOSABI_NONE:
