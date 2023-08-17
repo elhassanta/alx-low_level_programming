@@ -14,6 +14,7 @@ for a in range(100, 1000):
         if is_pal(number) == True:
             if pal < (a * b):
                 pal = a * b;
+                print(f"{pal} = {a} x {b}")
 
 with open("102-result", "w") as file:
     file.write(str(pal))
