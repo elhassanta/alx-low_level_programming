@@ -1,7 +1,7 @@
 #include "lists.h"
 /**
  *sum_dlistint - function calculate sum of dlinked list
- *head: pointer point to head of dlinked list
+ *@head: pointer point to head of dlinked list
  *Return: return sum of dlinked list
  */
 int sum_dlistint(dlistint_t *head)
