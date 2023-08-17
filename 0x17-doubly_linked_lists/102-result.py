@@ -16,6 +16,5 @@ for a in range(100, 1000):
                 pal = a * b;
                 print(f"{pal} = {a} x {b}")
 
-with open("102-result", "w") as file:
-    file.write(str(pal))
-print(pal)
+with open("102-result", "w") as fil:
+    fil.write(str(pal))
