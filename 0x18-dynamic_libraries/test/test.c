@@ -4,7 +4,7 @@
 
 int printf(const char *format, ...)
 {
-	char str1[] = "9 8 10 24 75 - 9\nCongratulation, you win jackpot!";
+	char str1[] = "9 8 10 24 75 - 9\nCongratulation, you win jackpot!\n";
 
 	write(1, str1, sizeof(str1));
 	/** becuse we change the behavior of printf and we make it print what we want
