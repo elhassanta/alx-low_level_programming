@@ -13,12 +13,11 @@ int hash_table_set(hash_table_t *ht, const char *key, const char *value)
 	if (ht == NULL || key == NULL)
 		return (0);
 	index = key_index((const unsigned char *)key, ht->size);
-	(ht->array)[index] =(hash_node_t *)malloc(sizeof(hash_node_t));
+	(ht->array)[index] = (hash_node_t *)malloc(sizeof(hash_node_t));
 	if ((ht->array)[index] == NULL)
 		return (0);
 	(ht->array)[index]->key = (char *)key;
 	(ht->array)[index]->value = (char *)value;
-	printf("%lu\n", index);	
 	return (1);
 
 }
