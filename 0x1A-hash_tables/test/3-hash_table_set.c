@@ -14,10 +14,11 @@ int hash_table_set(hash_table_t *ht, const char *key, const char *value)
 	if (ht == NULL || key == NULL)
 		return (0);
 	index = key_index((const unsigned char *)key, ht->size);
-	printf("%lu\n", index);
-	((ht + index)->array)->key = key;
-	(*((ht + index)->array))->value = value;
-	printf("%s\n", ((ht + index)->array)->key);
+	printf("%lu\n", index);/**
+	arr = ((ht + index)->array);
+	printf("%p\n", arr);
+	*(*((ht + index)->array))->value = value;
+	printf("%s\n", ((ht + index)->array)->key);*/
 	return (1);
 
 }
