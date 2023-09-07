@@ -10,7 +10,14 @@ char *hash_table_get(const hash_table_t *ht, const char *key)
 	unsigned long int index;
 	char *value = NULL;
 
-	index = key_index(key, ht->size);
-	value = (ht->array)[index]->value;
+	if (key == NULL)
+		return (NULL);
+	index = key_index((const unsigned char *)key, ht->size);
+	printf("index = %lu\n", index);
+
+	if ((ht->array)[index] != NULL)
+		value = (ht->array)[index]->value;
+	else
+		hash_table_set((hash_table_t *)ht, key, NULL);
 	return (value);
 }
