@@ -5,18 +5,8 @@
  */
 void hash_table_print(const hash_table_t *ht)
 {
-	unsigned long int size = 0, number_elements = 0, count = 0;
+	unsigned long int size = 0, count = 0;
 
-	while (size < ht->size)
-	{
-		if ((ht->array)[size])
-		{
-			number_elements++;
-		}
-		
-		size++;
-	}
-	size = 0;
 	printf("{");
 	while (size < ht->size)
 	{
@@ -25,12 +15,16 @@ void hash_table_print(const hash_table_t *ht)
 			if (count == 0)
 			{
 				printf("'%s': '%s'", (ht->array)[size]->key, (ht->array)[size]->value);
+				count++;
+				if ((ht->array)[size]->next)
+				{
+
+				}
 			}
 			else
 			{
 				printf(", '%s': '%s'", (ht->array)[size]->key, (ht->array)[size]->value);
 			}
-			count++;
 		}
 		size++;
 	}
