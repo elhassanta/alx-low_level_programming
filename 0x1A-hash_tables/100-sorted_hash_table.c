@@ -45,9 +45,7 @@ int shash_table_set(shash_table_t *ht, const char *key, const char *value)
 	if (!ht->array[index])
 	{
 		if (!ht->shead)
-			ht->shead = node;
-		if (!ht->stail)
-			ht->stail = node;
+			ht->shead = node, ht->stail = node;
 		node->sprev = NULL;
 		node->snext = NULL;
 		ht->array[index] = node;
@@ -58,8 +56,22 @@ int shash_table_set(shash_table_t *ht, const char *key, const char *value)
 		node->sprev = ht->stail;
 		node->snext = (NULL);
 		ht->stail = ht->stail->next;
-		ht->array[index] = NULL;
 	}
 	return (1);
 }
+/**
+ * shash_table_get - get an element from the hash table
+ * @ht: the hash table
+ * @key: the key of the element
+ *
+ * Return: the value if the element is exist and null otherwise
+ */
+char *shash_table_get(const shash_table_t *ht, const char *key)
+{
+	unsigned long int index;
 
+	index = key_index((unsigned char *)key, ht->size);
+	if (!ht->array[index])
+		return (NULL);
+	return (ht->array[index]->value);
+}
