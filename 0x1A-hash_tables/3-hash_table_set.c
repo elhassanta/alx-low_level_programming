@@ -31,7 +31,7 @@ int hash_table_set(hash_table_t *ht, const char *key, const char *value)
 			node = node->next;
 		tmp = (hash_node_t *)malloc(sizeof(hash_node_t));
 		tmp->key = (char *)strdup(key);
-		tmp->value = (char *)strdup(vlaue);
+		tmp->value = (char *)strdup(value);
 		tmp->next = NULL;
 		node->next = tmp;
 	}
