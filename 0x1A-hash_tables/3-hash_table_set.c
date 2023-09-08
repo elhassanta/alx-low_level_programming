@@ -28,7 +28,21 @@ int hash_table_set(hash_table_t *ht, const char *key, const char *value)
 	{
 		node = (ht->array)[index];
 		while (node->next)
+		{
+			if (!strcmp(node->key, key))
+			{
+				free(node->value);
+				node->value = strdup(value);
+				return (1)
+			}
 			node = node->next;
+		}
+		if (!strcmp(node->key, key))
+		{
+			free(node->value);
+			node->value = strdup(value);
+			return (1);
+		}
 		tmp = (hash_node_t *)malloc(sizeof(hash_node_t));
 		tmp->key = (char *)strdup(key);
 		tmp->value = (char *)strdup(value);
