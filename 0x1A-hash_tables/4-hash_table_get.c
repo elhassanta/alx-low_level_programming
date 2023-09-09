@@ -9,12 +9,28 @@ char *hash_table_get(const hash_table_t *ht, const char *key)
 {
 	unsigned long int index;
 	char *value = NULL;
+	hash_node_t *node;
 
 	if (key == NULL || ht == NULL || ht->array == NULL)
 		return (NULL);
 	index = key_index((const unsigned char *)key, ht->size);
 	if ((ht->array)[index] != NULL)
-		value = (ht->array)[index]->value;
+	{
+		if (!strcmp((ht->array)[index]->key, key))
+		{
+			value = (ht->array)[index]->value;
+		}
+		else if ((ht->array)[index]->next != NULL)
+		{
+			node = node->next;
+			while (node)
+			{
+				if (strcmp(node->key, key))
+					return (node->value);
+				node = node->next;
+			}
+		}
+	}
 	else
 		hash_table_set((hash_table_t *)ht, key, NULL);
 	return (value);
