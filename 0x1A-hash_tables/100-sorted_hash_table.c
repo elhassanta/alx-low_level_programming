@@ -45,7 +45,9 @@ int shash_table_set(shash_table_t *ht, const char *key, const char *value)
 	if (!ht->array[index])
 	{
 		if (!ht->shead)
+		{
 			ht->shead = node, ht->stail = node;
+		}
 		node->sprev = NULL;
 		node->snext = NULL;
 		ht->array[index] = node;
@@ -74,4 +76,27 @@ char *shash_table_get(const shash_table_t *ht, const char *key)
 	if (!ht->array[index])
 		return (NULL);
 	return (ht->array[index]->value);
+}
+
+/**
+ * shash_table_print - print the hash table using the linkedlist
+ * @ht: the hash table
+ */
+void shash_table_print(const shash_table_t *ht)
+{
+	shash_node_t *head = NULL;
+
+	if (ht && ht->shead)
+	{
+		printf("{");
+		head = ht->shead;
+		while (head->snext)
+		{
+			printf("'%s': '%s', ", head->key, head->value);
+			head = head->snext;
+		}
+		if (head)
+			printf("'%s': '%s'", head->key, head->value);
+		printf("}\n");
+	}
 }
